@@ -16,7 +16,8 @@ laserSpeed = 10
 script_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(script_dir, 'images')
 
-ship = Ship(Pos(100, 100), 5, os.path.join(images_dir, 'ship.png'))
+ship = PlayerShip(Pos(100, 100), 5, os.path.join(images_dir, 'ship.png'), screen)
+e1ship = EnemyShip(Pos(100, 300), 3, os.path.join(images_dir, 'enemy.png'), screen)
 
 
 # Load the bullet image
@@ -41,9 +42,13 @@ while running:
     ship.eval_input(keys, mouse_pos)
     ship.move()
 
+    e1ship.generateMove()
+    e1ship.move()
+
     screen.fill(pygame.Color(20, 23, 36))
 
-    ship.draw(screen)
+    ship.draw()
+    e1ship.draw()
 
     # Update lasers
     # for laser in lasers[:]:
