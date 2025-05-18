@@ -58,6 +58,17 @@ class Ship:
         if self.moveDirection == Direction.DOWN:
             self.pos.y += self.speed
 
+    def touchingWall(self):
+        walls = []
+        window = self.screen.get_rect()
+        if self.pos.x <= 0:
+            walls.append(Direction.LEFT)
+        if self.pos.y <= 0:
+            walls.append(Direction.UP)
+        if self.pos.x >= window.width:
+            walls.append(Direction.RIGHT)
+        if self.pos.y >= window.height:
+            walls.append(Direction.DOWN)
 
     def draw(self, screen):
         def blurPos(topleft, amount):
