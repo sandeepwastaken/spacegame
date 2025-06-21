@@ -2,6 +2,7 @@ import math
 import pygame as pygame
 import os as os
 from enum import Enum
+from laser import Laser
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(script_dir, 'images')
@@ -19,7 +20,7 @@ class Direction(Enum):
     LEFT = 4
 
 class Ship:
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen):
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
         self.size = 100
         self.pos:Pos = pos
         self.speed:int = speed
@@ -29,6 +30,10 @@ class Ship:
         self.angle:float = 0
         self.moveDirection:Direction = Direction.NONE
         self.screen = screen
+        self.laser:Laser = laser
+
+    def fire(self):
+        self.laser.fire(self.pos, self.angle)
 
     def move(self):
         if self.moveDirection == Direction.LEFT:
@@ -55,6 +60,8 @@ class Ship:
         return walls
 
     def draw(self):
+        self.laser.move_and_draw(self.screen)
+
         def blurPos(topleft, amount):
             bx, by = topleft
             if self.moveDirection == "UP":
@@ -77,8 +84,8 @@ class Ship:
         self.screen.blit(rotated_ship, new_rect.topleft)
 
 class PlayerShip(Ship):
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen):
-        super().__init__(pos, speed, asset_path, screen)
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
+        super().__init__(pos, speed, asset_path, screen, laser)
 
     def eval_input(self, key, mouse):
         self.moveDirection = Direction.NONE
@@ -103,8 +110,8 @@ class PlayerShip(Ship):
 
 
 class EnemyShip(Ship):
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen):
-        super().__init__(pos, speed, asset_path, screen)
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
+        super().__init__(pos, speed, asset_path, screen, laser)
         self.moveDirection = Direction.RIGHT
 
     def generateMove(self):
