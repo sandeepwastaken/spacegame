@@ -20,10 +20,12 @@ class Direction(Enum):
 
 class Ship:
     def __init__(self, pos:Pos, speed:int, asset_path:str, screen):
+        self.size = 100
         self.pos:Pos = pos
         self.speed:int = speed
         self.texture = pygame.image.load(os.path.join(images_dir, asset_path)) 
-        self.texture = pygame.transform.scale(self.texture, (50, 50))
+        self.texture_size = (self.size, self.texture.get_height()/(self.texture.get_width()/self.size))
+        self.texture = pygame.transform.scale(self.texture, self.texture_size)
         self.angle:float = 0
         self.moveDirection:Direction = Direction.NONE
         self.screen = screen
@@ -66,7 +68,7 @@ class Ship:
             return (bx, by)
 
         rotated_ship = pygame.transform.rotate(self.texture, self.angle)
-        new_rect = rotated_ship.get_rect(center=(self.pos.x + 25, self.pos.y + 25))
+        new_rect = rotated_ship.get_rect(center=(self.pos.x, self.pos.y))
         rotated_ship.set_alpha(64)
         self.screen.blit(rotated_ship, blurPos(new_rect.topleft, 12))
         rotated_ship.set_alpha(128)
@@ -94,7 +96,7 @@ class PlayerShip(Ship):
             self.moveDirection = Direction.DOWN
 
         mouse_x, mouse_y = mouse
-        dx, dy = mouse_x - (self.pos.x + 25), mouse_y - (self.pos.y + 25)
+        dx, dy = mouse_x - (self.pos.x), mouse_y - (self.pos.y)
         desiredAngle = math.degrees(math.atan2(-dy, dx)) 
         angleDiff = (desiredAngle - self.angle + 180) % 360 - 180
         self.angle += angleDiff / 10
