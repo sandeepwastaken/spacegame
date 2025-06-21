@@ -18,7 +18,7 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(script_dir, 'images')
 
 ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'))
-ship = PlayerShip(Pos(100, 100), 5, os.path.join(images_dir, 'ship.png'), screen, ship_laser)
+ship = PlayerShip(Pos(100, 100), 4, os.path.join(images_dir, 'ship.png'), screen, ship_laser)
 e1ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'))
 e1ship = EnemyShip(Pos(100, 300), 3, os.path.join(images_dir, 'enemy.png'), screen, e1ship_laser)
 
@@ -30,7 +30,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            ship.fire()
+            if event.key == pygame.K_SPACE:
+                ship.fire()
 
     # Update position
     keys = pygame.key.get_pressed()

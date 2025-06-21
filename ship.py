@@ -3,6 +3,7 @@ import pygame as pygame
 import os as os
 from enum import Enum
 from laser import Laser
+import copy
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(script_dir, 'images')
@@ -33,7 +34,7 @@ class Ship:
         self.laser:Laser = laser
 
     def fire(self):
-        self.laser.fire(self.pos, self.angle)
+        self.laser.fire(copy.deepcopy(self.pos), self.angle)
 
     def move(self):
         if self.moveDirection == Direction.LEFT:
