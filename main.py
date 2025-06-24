@@ -42,6 +42,8 @@ while running:
     e1ship.generateMove()
     e1ship.move()
 
+    ship.hit_ship([e1ship])
+
     screen.fill(pygame.Color(20, 23, 36))
 
     ship.draw()

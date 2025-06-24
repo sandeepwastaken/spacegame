@@ -60,6 +60,10 @@ class Ship:
 
         return walls
 
+    def hit_ship(self, ship_list):
+        for ship in ship_list:
+            self.laser.hit_ship(ship) 
+
     def draw(self):
         self.laser.move_and_draw(self.screen)
 

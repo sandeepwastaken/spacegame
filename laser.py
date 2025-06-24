@@ -24,3 +24,14 @@ class Laser:
 			if x < -5 or y < -5 or x > sx+5 or y > sy+5:
 				self.lasers.remove(laser)
 			screen.blit(rotated_bullet, new_rect.topleft)
+
+	def hit_ship(self, ship):
+		for laser in self.lasers[:]:
+			lx, ly = laser['pos'].x, laser['pos'].y
+			sx, sy = ship.pos.x, ship.pos.y
+			sh, sw = ship.texture.get_height(), ship.texture.get_width()
+
+			if lx >= sx-sw/2 and lx <= sx+sw/2 and \
+				ly >= sy-sh/2 and ly <= sy+sh/2:
+				self.lasers.remove(laser)
+
