@@ -21,7 +21,7 @@ class Direction(Enum):
     LEFT = 4
 
 class Ship:
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
         self.size = 100
         self.pos:Pos = pos
         self.speed:int = speed
@@ -32,6 +32,8 @@ class Ship:
         self.moveDirection:Direction = Direction.NONE
         self.screen = screen
         self.laser:Laser = laser
+        self.max_health = max_health
+        self.health = max_health
 
     def fire(self):
         self.laser.fire(copy.deepcopy(self.pos), self.angle)
@@ -88,9 +90,21 @@ class Ship:
         rotated_ship.set_alpha(255)
         self.screen.blit(rotated_ship, new_rect.topleft)
 
+
+        health_percentage = self.health / self.max_health * 100
+        if health_percentage < 50:
+            colour = (255, int(health_percentage*5.1), 0)
+        else:
+            colour = (int(255-((health_percentage-50)*5.1)), 255, 0)
+
+        hh, hw = 15, 100
+        pygame.draw.rect(self.screen, colour, pygame.Rect(self.pos.x-hw/2, self.pos.y-self.texture.get_height(), hw, hh), 2)
+
+        pygame.draw.rect(self.screen, colour, pygame.Rect(self.pos.x-hw/2 + (100-health_percentage)/100*hw, self.pos.y-self.texture.get_height(), health_percentage/100*hw, hh))
+
 class PlayerShip(Ship):
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
-        super().__init__(pos, speed, asset_path, screen, laser)
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
+        super().__init__(pos, speed, asset_path, screen, laser, max_health)
 
     def eval_input(self, key, mouse):
         self.moveDirection = Direction.NONE
@@ -115,8 +129,8 @@ class PlayerShip(Ship):
 
 
 class EnemyShip(Ship):
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser):
-        super().__init__(pos, speed, asset_path, screen, laser)
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
+        super().__init__(pos, speed, asset_path, screen, laser, max_health)
         self.moveDirection = Direction.RIGHT
 
     def generateMove(self):

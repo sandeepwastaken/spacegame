@@ -17,10 +17,10 @@ running = True
 script_dir = os.path.dirname(os.path.abspath(__file__))
 images_dir = os.path.join(script_dir, 'images')
 
-ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'))
-ship = PlayerShip(Pos(100, 100), 4, os.path.join(images_dir, 'ship.png'), screen, ship_laser)
-e1ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'))
-e1ship = EnemyShip(Pos(100, 300), 3, os.path.join(images_dir, 'enemy.png'), screen, e1ship_laser)
+ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'), 10)
+ship = PlayerShip(Pos(100, 100), 4, os.path.join(images_dir, 'ship.png'), screen, ship_laser, 1000)
+e1ship_laser = Laser(10, os.path.join(images_dir, 'bullet.png'), 10)
+e1ship = EnemyShip(Pos(100, 300), 3, os.path.join(images_dir, 'enemy.png'), screen, e1ship_laser, 200)
 
 
 

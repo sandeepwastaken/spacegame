@@ -2,10 +2,11 @@ import pygame
 import math
 
 class Laser:
-	def __init__(self, speed, asset_path):
+	def __init__(self, speed, asset_path, damage):
 		self.lasers = []
 		self.speed = speed
 		self.texture = pygame.image.load(asset_path)
+		self.damage = damage
 
 	def fire(self, pos, angle):
 		radians = math.radians(angle)
@@ -34,4 +35,5 @@ class Laser:
 			if lx >= sx-sw/2 and lx <= sx+sw/2 and \
 				ly >= sy-sh/2 and ly <= sy+sh/2:
 				self.lasers.remove(laser)
+				ship.health -= self.damage	
 
