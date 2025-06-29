@@ -20,6 +20,25 @@ class Direction(Enum):
     RIGHT = 3
     LEFT = 4
 
+class DirectionQuant():
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.up:float = 0
+        self.down:float = 0
+        self.right:float = 0
+        self.left:float = 0
+    
+    def new_pos(self, pos:Pos, speed:int):
+        pos = copy.deepcopy(pos)
+        pos.x += self.right * speed
+        pos.x -= self.left * speed
+        pos.y += self.down * speed
+        pos.y -= self.up * speed
+        return pos
+
+
 class Ship:
     def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
         self.size = 100
@@ -29,7 +48,7 @@ class Ship:
         self.texture_size = (self.size, self.texture.get_height()/(self.texture.get_width()/self.size))
         self.texture = pygame.transform.scale(self.texture, self.texture_size)
         self.angle:float = 0
-        self.moveDirection:Direction = Direction.NONE
+        self.moveDirection:DirectionQuant = DirectionQuant()
         self.screen = screen
         self.laser:Laser = laser
         self.max_health = max_health
@@ -39,14 +58,7 @@ class Ship:
         self.laser.fire(copy.deepcopy(self.pos), self.angle)
 
     def move(self):
-        if self.moveDirection == Direction.LEFT:
-            self.pos.x -= self.speed
-        if self.moveDirection == Direction.RIGHT:
-            self.pos.x += self.speed
-        if self.moveDirection == Direction.UP:
-            self.pos.y -= self.speed
-        if self.moveDirection == Direction.DOWN:
-            self.pos.y += self.speed
+        self.pos = self.moveDirection.new_pos(self.pos, self.speed)
 
     def touchingWall(self):
         walls = []
@@ -107,19 +119,15 @@ class PlayerShip(Ship):
         super().__init__(pos, speed, asset_path, screen, laser, max_health)
 
     def eval_input(self, key, mouse):
-        self.moveDirection = Direction.NONE
+        self.moveDirection.reset()
         if key[pygame.K_LEFT] or key[pygame.K_a]:
-            self.pos.x -= self.speed
-            self.moveDirection = Direction.LEFT
+            self.moveDirection.left = 1
         if key[pygame.K_RIGHT] or key[pygame.K_d]:
-            self.pos.x += self.speed
-            self.moveDirection = Direction.RIGHT
+            self.moveDirection.right = 1
         if key[pygame.K_UP] or key[pygame.K_w]:
-            self.pos.y -= self.speed
-            self.moveDirection = Direction.UP
+            self.moveDirection.up = 1
         if key[pygame.K_DOWN] or key[pygame.K_s]:
-            self.pos.y += self.speed
-            self.moveDirection = Direction.DOWN
+            self.moveDirection.down= 1
 
         mouse_x, mouse_y = mouse
         dx, dy = mouse_x - (self.pos.x), mouse_y - (self.pos.y)
