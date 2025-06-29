@@ -139,12 +139,26 @@ class PlayerShip(Ship):
 class EnemyShip(Ship):
     def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
         super().__init__(pos, speed, asset_path, screen, laser, max_health)
-        self.moveDirection = Direction.RIGHT
+        self.moveDirection = DirectionQuant()
 
-    def generateMove(self):
-        walls = self.touchingWall()
-        if Direction.RIGHT in walls:
-            self.moveDirection = Direction.LEFT
-        if Direction.LEFT in walls:
-            self.moveDirection = Direction.RIGHT
+    def generateMove(self, playerShip:PlayerShip):
+        self.moveDirection.reset()
+        dx = playerShip.pos.x - self.pos.x
+        dy = playerShip.pos.y - self.pos.y
+
+        distance = math.sqrt(dx**2 + dy**2)
+        mx = dx/distance
+        my = dy/distance
+        if mx > 0:
+            self.moveDirection.right = mx
+        else:
+            self.moveDirection.left = abs(mx)
+        if my > 0:
+            self.moveDirection.down = my
+        else:
+            self.moveDirection.up = abs(my)
+
+        desiredAngle = math.degrees(math.atan2(-dy, dx)) 
+        angleDiff = (desiredAngle - self.angle + 180) % 360 - 180
+        self.angle += angleDiff / 10
 
