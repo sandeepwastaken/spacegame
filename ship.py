@@ -69,24 +69,24 @@ class Ship:
     def draw(self):
         self.laser.move_and_draw(self.screen)
 
-        def blurPos(topleft, amount):
-            bx, by = topleft
-            if self.moveDirection == "UP":
-                by += amount
-            elif self.moveDirection == "DOWN":
-                by -= amount
-            elif self.moveDirection == "RIGHT":
-                bx -= amount
-            elif self.moveDirection == "LEFT":
-                bx += amount
-            return (bx, by)
+        # def blurPos(topleft, amount):
+        #     bx, by = topleft
+        #     if self.moveDirection == "UP":
+        #         by += amount
+        #     elif self.moveDirection == "DOWN":
+        #         by -= amount
+        #     elif self.moveDirection == "RIGHT":
+        #         bx -= amount
+        #     elif self.moveDirection == "LEFT":
+        #         bx += amount
+        #     return (bx, by)
 
         rotated_ship = pygame.transform.rotate(self.texture, self.angle)
         new_rect = rotated_ship.get_rect(center=(self.pos.x, self.pos.y))
-        rotated_ship.set_alpha(64)
-        self.screen.blit(rotated_ship, blurPos(new_rect.topleft, 12))
-        rotated_ship.set_alpha(128)
-        self.screen.blit(rotated_ship, blurPos(new_rect.topleft, 6))
+        # rotated_ship.set_alpha(64)
+        # self.screen.blit(rotated_ship, blurPos(new_rect.topleft, 12))
+        # rotated_ship.set_alpha(128)
+        # self.screen.blit(rotated_ship, blurPos(new_rect.topleft, 6))
         rotated_ship.set_alpha(255)
         self.screen.blit(rotated_ship, new_rect.topleft)
 
