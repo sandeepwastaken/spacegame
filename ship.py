@@ -3,6 +3,7 @@ import pygame as pygame
 import os as os
 from enum import Enum
 from laser import Laser
+import datetime
 import copy
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -137,9 +138,11 @@ class PlayerShip(Ship):
 
 
 class EnemyShip(Ship):
-    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int):
+    def __init__(self, pos:Pos, speed:int, asset_path:str, screen, laser:Laser, max_health:int, fire_rate:int):
         super().__init__(pos, speed, asset_path, screen, laser, max_health)
         self.moveDirection = DirectionQuant()
+        self.lastFire = datetime.datetime.now().microsecond
+        self.fire_rate = fire_rate
 
     def generateMove(self, playerShip:PlayerShip):
         self.moveDirection.reset()
@@ -162,3 +165,7 @@ class EnemyShip(Ship):
         angleDiff = (desiredAngle - self.angle + 180) % 360 - 180
         self.angle += angleDiff / 10
 
+    def fire(self):
+        if datetime.datetime.now().microsecond >= 1000000/self.fire_rate+self.lastFire:
+            self.laser.fire(copy.deepcopy(self.pos), self.angle)
+            self.lastFire = datetime.datetime.now().microsecond
